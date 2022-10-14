@@ -2,7 +2,6 @@ on:
   push:
     branches:
       - releases/**
-
 jobs:
   deploy:
     name: Build and Deploy Image
@@ -16,8 +15,8 @@ jobs:
         run: echo "${{ steps.branch-name.outputs.current_branch }}" | cut -d "/" -f2 | while read line; do echo "::set-output name=tag::$line"; done
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Build with Docker
-        run: docker build . -t ${{ secrets.DOCKER_HUB_USERNAME }}/strapiv4-node:${{ steps.tag-name.outputs.tag }}
+      - name: Build Image with Docker
+        run: cd ${{ steps.tag-name.outputs.tag }} && docker build . -t ${{ secrets.DOCKER_HUB_USERNAME }}/strapiv4-node:${{ steps.tag-name.outputs.tag }}
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
